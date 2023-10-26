@@ -9,7 +9,7 @@ namespace WebApiDemo.Data
         {
         }
         public DbSet<Book> Books { get; set; }
-       /* public DbSet<Student> Students { get; set; }
-        public DbSet<Employee> employees { get; set; }*/
+       public DbSet<Student> Students { get; set; }
+        public DbSet<Employee> employees { get; set; }
     }
 }

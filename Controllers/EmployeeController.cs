@@ -8,21 +8,22 @@ namespace WebApiDemo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookController : ControllerBase
+    public class EmployeeController : ControllerBase
     {
-        private readonly IBookServices services;
-        public BookController(IBookServices services)
+        private readonly IEmployeeService services;
+        public EmployeeController(IEmployeeService services)
         {
-            this.services = services;
+                this.services = services;
         }
-        // GET: api-->Book-->Getbooks
+
+        // GET: api/<EmployeeController>
         [HttpGet]
-        [Route("GetBooks")]
+        [Route("GetEmployees")]
         public IActionResult Get()
         {
             try
             {
-                var model = services.GetBooks();
+                var model = services.GetEmployees();
                 return new ObjectResult(model);
             }
             catch (Exception ex)
@@ -31,14 +32,14 @@ namespace WebApiDemo.Controllers
             }
         }
 
-        // GET api-->Book-->getbookbyid-->1
+        // GET api/<EmployeeController>/5
         [HttpGet]
-        [Route("GetBookById/{id}")]
+        [Route("GetEmployeeById/{id}")]
         public IActionResult Get(int id)
         {
             try
             {
-                var model = services.GetBookById(id);
+                var model = services.GetEmployeeById(id);
                 if (model != null)
                     return new ObjectResult(model);
                 else
@@ -50,14 +51,14 @@ namespace WebApiDemo.Controllers
             }
         }
 
-        // POST api/Book-->Add Book
+        // POST api/<EmployeeController>
         [HttpPost]
-        [Route("AddBook")]
-        public IActionResult Post([FromBody] Book book)//from body of http
+        [Route("AddEmployee")]
+        public IActionResult Post([FromBody] Employee employee)//from body of http
         {
             try
             {
-                int result = services.AddBook(book);
+                int result = services.AddEmployee(employee);
                 if (result >= 1)
                 {
                     return StatusCode(StatusCodes.Status201Created);
@@ -75,14 +76,14 @@ namespace WebApiDemo.Controllers
             }
         }
 
-        // PUT api/Book/UpdateBook
+        // PUT api/<EmployeeController>/5
         [HttpPut]
-        [Route("UpdateBook")]
-        public IActionResult Put([FromBody] Book book)
+        [Route("UpdateEmployee")]
+        public IActionResult Put([FromBody] Employee employee)
         {
             try
             {
-                int result = services.UpdateBook(book);
+                int result = services.UpdateEmployee(employee);
                 if (result >= 1)
                 {
                     return StatusCode(StatusCodes.Status200OK);
@@ -99,31 +100,31 @@ namespace WebApiDemo.Controllers
             }
         }
 
-            // DELETE api/<BookController>/5
-            [HttpDelete]
-            [Route("DeleteBook/{id}")]
-            public IActionResult Delete(int id)
+        // DELETE api/<EmployeeController>/5
+       
+        [HttpDelete]
+        [Route("DeleteEmployee/{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
             {
-                try
-                {
-                
-                    int result = services.DeleteBook(id);
-                    if (result >= 1)
-                    {
-                        return StatusCode(StatusCodes.Status200OK);
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status400BadRequest);
-                    }
 
-                
-                }   
-                     catch(Exception ex)
+                int result = services.DeleteEmployee(id);
+                if (result >= 1)
                 {
-                        return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    return StatusCode(StatusCodes.Status200OK);
                 }
+                else
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+
+
             }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
     }
 }
-

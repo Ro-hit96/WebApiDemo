@@ -8,21 +8,22 @@ namespace WebApiDemo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookController : ControllerBase
+    public class StudentController : ControllerBase
     {
-        private readonly IBookServices services;
-        public BookController(IBookServices services)
+        private readonly IStudentService service;
+        public StudentController(IStudentService service)
         {
-            this.services = services;
+                this.service = service;
         }
-        // GET: api-->Book-->Getbooks
+
+        // GET: api/<StudentController>
         [HttpGet]
-        [Route("GetBooks")]
+        [Route("GetStudent")]
         public IActionResult Get()
         {
             try
             {
-                var model = services.GetBooks();
+                var model = service.GetStudents();
                 return new ObjectResult(model);
             }
             catch (Exception ex)
@@ -31,14 +32,14 @@ namespace WebApiDemo.Controllers
             }
         }
 
-        // GET api-->Book-->getbookbyid-->1
+        // GET api/<StudentController>/5
         [HttpGet]
-        [Route("GetBookById/{id}")]
+        [Route("GetStudentByRno/{id}")]
         public IActionResult Get(int id)
         {
             try
             {
-                var model = services.GetBookById(id);
+                var model = service.GetStudentByRno(id);
                 if (model != null)
                     return new ObjectResult(model);
                 else
@@ -50,14 +51,13 @@ namespace WebApiDemo.Controllers
             }
         }
 
-        // POST api/Book-->Add Book
         [HttpPost]
-        [Route("AddBook")]
-        public IActionResult Post([FromBody] Book book)//from body of http
+        [Route("AddStudent")]
+        public IActionResult Post([FromBody] Student student)//from body of http
         {
             try
             {
-                int result = services.AddBook(book);
+                int result = service.AddStudent(student);
                 if (result >= 1)
                 {
                     return StatusCode(StatusCodes.Status201Created);
@@ -75,14 +75,14 @@ namespace WebApiDemo.Controllers
             }
         }
 
-        // PUT api/Book/UpdateBook
+        // PUT api/<StudentController>/5
         [HttpPut]
-        [Route("UpdateBook")]
-        public IActionResult Put([FromBody] Book book)
+        [Route("UpdateStudent")]
+        public IActionResult Put([FromBody] Student student)
         {
             try
             {
-                int result = services.UpdateBook(book);
+                int result = service.UpdateStudent(student);
                 if (result >= 1)
                 {
                     return StatusCode(StatusCodes.Status200OK);
@@ -99,31 +99,31 @@ namespace WebApiDemo.Controllers
             }
         }
 
-            // DELETE api/<BookController>/5
-            [HttpDelete]
-            [Route("DeleteBook/{id}")]
-            public IActionResult Delete(int id)
+        // DELETE api/<StudentController>/5
+        [HttpDelete]
+        [Route("DeleteStudent/{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
             {
-                try
-                {
-                
-                    int result = services.DeleteBook(id);
-                    if (result >= 1)
-                    {
-                        return StatusCode(StatusCodes.Status200OK);
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status400BadRequest);
-                    }
 
-                
-                }   
-                     catch(Exception ex)
+                int result = service.DeleteStudent(id);
+                if (result >= 1)
                 {
-                        return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    return StatusCode(StatusCodes.Status200OK);
                 }
+                else
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+
+
             }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+   
+            }
+        }  
     }
 }
-
